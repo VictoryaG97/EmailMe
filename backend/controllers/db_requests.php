@@ -35,4 +35,21 @@
         }
     }
 
+    function selectAndWhereQuery($table, $column, $value) {
+        global $conn;
+        try {
+            $query = 'SELECT * FROM ' . $table . ' WHERE ' . $column[0] . ' = ? AND ' . $column[1] . ' = ?';
+            $stmt = $conn->prepare($query);
+            $stmt->execute($value);
+
+            $result = [];
+            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                $result[] = $row;
+            }
+            return $result;
+        } catch (Exception $e) {
+            return null;
+        }
+    }
+
 ?>

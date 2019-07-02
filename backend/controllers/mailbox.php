@@ -35,10 +35,10 @@
             $mailbox_info = selectWhereQuery("mail_box", "owner_id", $owner_id);
             if ($mailbox_info) {
                 http_response_code(200);
-                echo response(array("message" => $mailbox_info));
+                echo json_encode($mailbox_info);
             } else {
                 http_response_code(404);
-                echo response(array("message" => ""));
+                echo json_encode(array("message" => ""));
             }
         } else {
             http_response_code(404);

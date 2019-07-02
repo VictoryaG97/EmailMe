@@ -150,6 +150,14 @@ iframe {
     padding: 0 20px;
 }
 
+.info-message-error {
+    display: none;
+    align-items: center;
+    background-color: #d1606094;
+    border-radius: 25px;
+    padding: 0 20px;
+}
+
 /* REGISTER */
 
 .register-form {
@@ -165,9 +173,95 @@ iframe {
     margin-top: 18%;
 }
 
-/* HOMEPAGE */
+/* MAINPAGE */
 
+.main-container {
+    display: flex;
+}
 
+    /* NAVIGATION */
+
+.muffin-navigation {
+    font-family: Montserrat-Bold;
+    align-items: center;
+    margin: 3%;
+    padding: 20px;
+    width: 20%;
+    border-radius: 25px;
+    background-color: white;
+}
+
+.new-mail {
+    width: 70%;
+    border-radius: 25px;
+    background-color: #9299b4;
+    padding: 10px;
+}
+
+.new-mail button {
+    width: 100%;
+    font-size: 22px;
+    text-align: center;
+}
+
+.accordion {
+    background-color: white;
+    color: #444;
+    cursor: pointer;
+    margin: 8px;
+    padding: 20px;
+    width: 100%;
+    border: none;
+    border-radius: 25px;
+    text-align: left;
+    font-size: 22px;
+    transition: 0.4s;
+}
+
+.active, .accordion:hover {
+    background-color: #f4f4f4;
+}
+
+.mail-boxes {
+    padding: 0 18px;
+    display: none;
+    background-color: white;
+    overflow: hidden;
+}
+
+.muffin-exit {
+    width: 70%;
+    border-radius: 25px;
+    background-color: #9299b4;
+    padding: 10px;
+}
+
+.muffin-exit button {
+    width: 100%;
+    font-size: 22px;
+    text-align: center;
+}
+
+    /* MAIN */
+
+.main-frame {
+    font-family: Montserrat-Bold;
+    align-items: center;
+    margin: 3%;
+    padding: 20px;
+    width: 60%;
+    border-radius: 25px;
+    background-color: white;
+}
+
+.main-frame ul {
+    display: flex;
+    padding: 2px;   
+}
+
+.main-frame li {
+    padding: 2px;
+}
 
 .logo {
     width: 100%;

@@ -8,6 +8,14 @@ function displayInfoMessage() {
         successMessageElement.style.display = 'flex';
         sessionStorage.removeItem('loginScreenSuccessMessage');
     }
+
+    if (!!sessionStorage.getItem('notLoggedMessage')) {
+        const errorMessageElement = document.getElementById('error-message');
+        const errorMessageTextNode = document.createTextNode(sessionStorage.getItem('notLoggedMessage'));
+        errorMessageElement.appendChild(errorMessageTextNode);
+        errorMessageElement.style.display = 'flex';
+        sessionStorage.removeItem('notLoggedMessage');
+    }
 }
 
 function login() {
@@ -20,7 +28,8 @@ function login() {
     xhr.onload = function() {
         if (xhr.status === 200) {
             window.localStorage.setItem("token", xhr.response.jwt);
-            window.location.href = '../homepage/homepage.php';
+            window.localStorage.setItem("email", xhr.response.email);
+            window.location.href = '../mainpage/mainpage.php';
         } else {
             displayUnsuccessfulLogin();
         }   

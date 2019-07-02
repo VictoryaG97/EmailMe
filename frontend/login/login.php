@@ -13,7 +13,9 @@
                 <span class="brand"> Muffin </span>
             </div>
             <div class="muffin-form-wrap">
+                <!-- FIX SUCCESS/ERROR MESSAGES -->
                 <div id="success-message" class="info-message-success"></div>
+                <div id="error-message" class="info-message-error"></div>
                 <div class="form-img">
                     <img src="../img/form-background.png" alt="IMG">
                 </div>
