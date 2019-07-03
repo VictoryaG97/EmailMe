@@ -4,6 +4,7 @@
         private $mailbox_id;
         private $sender_id;
         private $reciever_id;
+        private $ref_number;
         private $message;
         private $subject;
         private $send_date;
@@ -13,11 +14,25 @@
             $this->id = $id;
         }
 
-        public function setMailboxId($mailbox_name) {
-            $all_boxes = selectWhereQuery("mail_box", "owner_id", $this->sender_id);
-            foreach ($all_boxes as $box) {
-                if ($box["box_name"] == $mailbox_name) {
-                    $this->mailbox_id = $box["id"];
+        public function setMailboxId($mail_type) {
+            $response = array();
+            if ($mail_type == 1) {
+                // $this->mailbox_id = 2;
+                $resopnse = selectAndWhereQuery(
+                    "mail_box",
+                    ["owner_id", "type"],
+                    [$this->getRecieverId(), 1]);
+                if ($response){
+                    $this->mailbox_id = $response[0]["id"];
+                }
+            }
+            else {
+                $response = selecAndtWhereQuery(
+                    "mail_box",
+                    ["ref_number", "type"],
+                    [$this->ref_number, $mail_type]);
+                if ($response) {
+                    $this->mailbox_id = $response[0]["id"];
                 }
             }
         }
@@ -33,6 +48,21 @@
             $reciever_info = selectWhereQuery("user", "email", $reciever_email);
             if ($reciever_info) {
                 $this->reciever_id = $reciever_info[0]["id"];
+            }
+        }
+
+        public function setRefNumber($ref_number, $box_type) {
+            $this->ref_number = $ref_number;
+
+            if ($box_type == 2) {
+                $response = selectAndWhereQuery(
+                    "mail_box",
+                    ["ref_number", "type"],
+                    [$ref_number, $box_type]);
+
+                if ($response) {
+                    $reciever_id = $response[0]["owner_id"];
+                }
             }
         }
 
@@ -78,13 +108,20 @@
             if ($this->sender_id && $this->reciever_id){
                 $insert_request = insertQuery(
                     "mail",
-                    ["mailbox_id", "sender_id", "reciever_id", "message", "subject"],
-                    [$this->mailbox_id, $this->sender_id, $this->reciever_id, $this->message, $this->subject]
+                    ["mailbox_id", "sender_id", "reciever_id", "message", "subject", "send_date", "is_read"],
+                    [$this->mailbox_id, $this->sender_id, $this->reciever_id, $this->message, $this->subject, date("Y/m/d"), false]
                 );
 
                 if ($insert_request["status"]) {
                     $response["statusCode"] = 200;
-                    $response["message"] = "Mail send!";
+                    // $response["message"] = "Mail send!";
+                    $response["message"] = array(
+                        "queryResponse" => $insert_request["queryResponse"],
+                        "status"=> $insert_request["status"],
+                        "mailbox_id" => $this->mailbox_id,
+                        "sender_id" =>$this->sender_id,
+                        "reciever_id" => $this->reciever_id
+                    );
                 } else {
                     $response["statusCode"] = 400;
                     $response["message"] = "Could not sent the mail";

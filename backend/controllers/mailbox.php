@@ -2,10 +2,10 @@
     function create_mailbox($user_email, $box_name) {
         $response = array();
 
-        $row = selectWhereQuery("user", "email", $user_email);
+        $user_response = selectWhereQuery("user", "email", $user_email);
 
-        if ($row){
-            $owner_id = $row[0]["id"];
+        if ($user_response){
+            $owner_id = $user_response[0]["id"];
 
             $insert_request = insertQuery(
                 "mail_box",

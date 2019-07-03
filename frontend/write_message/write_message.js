@@ -48,41 +48,40 @@ function showHideMailBoxes() {
     }
 }
 
-function getMails() {
+function changePlaceholder(radio) {
+    const input = document.getElementById("reciever");
+    if (radio.value == 1) {
+        input.placeholder = "Имейл адрес";
+    } else {
+        input.placeholder = "Номер на тема на реферат";
+    }
+}
+
+function sendMail() {
     const token = window.localStorage.getItem("token");
     const email = window.localStorage.getItem("email");
+    const type = document.getElementById("mail-type").value;
+    const reciever = document.getElementById("message-reciever").value;
+    const subjct = document.getElementById("subject").value;
+    const message = document.getElementById("message").value;
 
+    data = {"type": type, "reciever": reciever, "subject": subjct, "message": message}
+    console.log(data);
     const xhr = new XMLHttpRequest();
     xhr.responseType = 'json';
     xhr.onload = function() {
         if (xhr.status === 200) {
-            fillMails(xhr.response.body);
+            console.log("Message Send");
+            // window.location.href = '../mainpage/mainpage.php';
         } else {
-            console.error("Error! Failed to fetch mailboxes!");
+            console.error("Error! Failed to send message!");
         }
     };
-    xhr.open('GET', '../../backend/api/mail.php', true);
+    xhr.open('POST', '../../backend/api/mail.php', true);
     xhr.setRequestHeader('Content-Type', 'application/json');
     xhr.setRequestHeader('Authorization', "JWT " + token);
     xhr.setRequestHeader('Email', email);
-    xhr.setRequestHeader('Boxname', "General");
-    xhr.send();
-}
-
-function fillMails(data) {
-    for (var i = 0; i < data.length; i++) {
-        var list = document.createElement("ul");
-        for (const key in data[i]) {
-            var item = document.createElement('li');
-            item.appendChild(document.createTextNode(data[i][key]));
-            list.appendChild(item);
-        }
-        document.getElementById("main-frame").appendChild(list);
-    }
-}
-
-function writeMessage() {
-    window.location.href = '../write_message/write_message.php';
+    xhr.send(JSON.stringify(data));
 }
 
 function exit() {

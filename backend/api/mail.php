@@ -3,6 +3,7 @@ require __DIR__.'\..\vendor\autoload.php';
 use \Firebase\JWT\JWT;
 
 include_once dirname(__FILE__)."\..\common\base.php";
+include_once dirname(__FILE__)."\..\base_models\mail.php";
 include_once dirname(__FILE__)."\..\base_models\mailbox.php";
 include_once dirname(__FILE__)."\..\controllers\mailbox.php";
 include_once dirname(__FILE__)."\..\controllers\db_requests.php";
@@ -18,6 +19,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 JWT::$leeway = 5;
 $secret_key = "secret_key_test";
 $jwt = null;
+
+$request_method = $_SERVER['REQUEST_METHOD'];
 $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
 $email = $_SERVER["HTTP_EMAIL"];
 
@@ -30,10 +33,36 @@ if($jwt) {
     try {
         $decoded = JWT::decode($jwt, $secret_key, array('HS256'));
 
-        $mail = new MailBox();
-        $mail->setBoxName($input["box_name"]);
-        $mail->setOwnerEmail($email);
-        echo $mail->getMails();
+        if ($request_method == 'GET') {
+            $box_name = $_SERVER["HTTP_BOXNAME"];
+            $mail = new MailBox();
+            $mail->setBoxName($box_name);
+            $mail->setOwnerEmail($email);
+            if (isset($_GET["mail_id"])) {
+                // get specific email
+                echo $mail.getMail($_GET["mail_id"]);
+            } else {
+                // get all emails in this box
+                echo $mail->getMails();
+            }
+        } else {
+                $mail = new Mail();
+                $mail->setSenderId($email);
+                $mail_type = $input["type"];
+                if ($mail_type == 1) {
+                    $mail->setRecieverId($input["reciever"]);
+                } else if ($mail_type == 2) {
+                    $mail->setRefNumber($input["reciever"]);
+                }
+                $mail->setSubject($input["subject"]);
+                $mail->setMessage($input["message"]);
+                
+                $mail->setMailboxId($mail_type);
+                $mail_response = $mail->sendMail();
+        
+                http_response_code($mail_response["statusCode"]);
+                echo response($mail_response);
+        }
     } catch (Exception $e) {
         http_response_code(401);
     

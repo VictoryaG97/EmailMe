@@ -1,9 +1,9 @@
 <?php
-$DB_HOST = '';
-$DB_DATABASE = '';
-$DB_PORT = '';
-$DB_USER = '';
-$DB_PASS = '';
+$DB_HOST = 'muffindb.cvzp6pu50kcj.us-east-1.rds.amazonaws.com';
+$DB_DATABASE = 'muffindb';
+$DB_PORT = '3306';
+$DB_USER = 'vguncheva';
+$DB_PASS = '12345678';
 $CHARSET = 'utf8';
 
 try {

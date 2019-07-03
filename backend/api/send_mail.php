@@ -15,6 +15,7 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 
 // check if user is logged in
+JWT::$leeway = 5;
 $secret_key = "secret_key_test";
 $jwt = null;
 $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
@@ -27,15 +28,17 @@ $jwt = $arr[1];
 if($jwt) {
     try {
         $decoded = JWT::decode($jwt, $secret_key, array('HS256'));
-
         $mail = new Mail();
         $mail->setSenderId($email);
-        $mail->setRecieverId($input["reciever"]);
+        if ($input["reciever"]) {
+            $mail->setRecieverId($input["reciever"]);
+        }
+        if ($input["ref_number"]) {
+            $mail->setRefNumber($input["ref_number"]);
+        }
         $mail->setSubject($input["subject"]);
         $mail->setMessage($input["message"]);
-        $mail->setMailboxId("General");
         $mail_response = $mail->sendMail();
-
         http_response_code($mail_response["statusCode"]);
         echo response($mail_response);
     } catch (Exception $e) {

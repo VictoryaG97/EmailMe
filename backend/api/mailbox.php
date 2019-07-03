@@ -14,10 +14,14 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 
 // check if user is logged in
+JWT::$leeway = 5;
 $secret_key = "secret_key_test";
 $jwt = null;
+
+$request_method = $_SERVER['REQUEST_METHOD'];
 $authHeader = $_SERVER['HTTP_AUTHORIZATION'];
 $email = $_SERVER["HTTP_EMAIL"];
+
 $input = json_decode(file_get_contents('php://input'), TRUE);
 
 $arr = explode(" ", $authHeader);
@@ -26,6 +30,20 @@ $jwt = $arr[1];
 if($jwt) {
     try {
         $decoded = JWT::decode($jwt, $secret_key, array('HS256'));
+
+        if($request_method == "GET") {
+            echo get_user_mailboxes($email);
+        } else {
+            $mailbox = new MailBox();
+            $mailbox->setBoxName($input["name"]);
+            $mailbox->setOwnerEmail($email);
+            $mailbox->setBoxType($input["type"]);
+            $mailbox->setRefNumber($input["ref_number"]);
+            $box_response = $mailbox->createMailBox();
+        
+            http_response_code($box_response["statusCode"]);
+            echo response($box_response);
+        }
     } catch (Exception $e) {
         http_response_code(401);
         echo json_encode(array(
@@ -33,12 +51,6 @@ if($jwt) {
             "error" => $e->getMessage()
         ));
     }
-    $mailbox = new MailBox();
-    $mailbox->setBoxName($input["name"]);
-    $box_response = $mailbox->createMailBox($email);
-
-    http_response_code($box_response["statusCode"]);
-    echo response($box_response);
 } else {
     http_response_code(401);
     echo json_encode(array(
