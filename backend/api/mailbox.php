@@ -35,8 +35,8 @@ if($jwt) {
             echo get_user_mailboxes($email);
         } else {
             $mailbox = new MailBox();
-            $mailbox->setBoxName($input["name"]);
             $mailbox->setOwnerEmail($email);
+            $mailbox->setBoxName($input["name"]);
             $mailbox->setBoxType($input["type"]);
             $mailbox->setRefNumber($input["ref_number"]);
             $box_response = $mailbox->createMailBox();

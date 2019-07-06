@@ -15,6 +15,14 @@
 
         public function setBoxName($box_name) {
             $this->box_name = $box_name;
+
+            // set box type
+            $box_response = selectWhereQuery("mail_box", "box_name", $this->box_name);
+            foreach ($box_response as $box) {
+                if ($box["owner_id"] == $this->getOwnerId()) {
+                    $this->setBoxType($box["type"]);
+                }
+            }
         }
 
         public function setOwnerId($owner_id) {
@@ -35,9 +43,12 @@
 
         public function getId() {
             if (!$this->id) {
-                $response = selectAndWhereQuery("mail_box", ["box_name", "owner_id"], [$this->box_name, $this->getOwnerId()]);
-                if ($response) {
-                    $this->id = $response[0]["id"];
+                $response = selectWhereQuery(
+                    "mail_box", "box_name", $this->box_name
+                );
+                foreach ($response as $row) {
+                    if ($row["owner_id"] == $this->getOwnerId())
+                        $this->id = $row["id"];
                 }
             }
             return $this->id;
@@ -62,9 +73,6 @@
         }
 
         public function getBoxType() {
-            if (!$this->type) {
-                $this->type = 1;
-            }
             return $this->type;
         }
 
@@ -100,12 +108,17 @@
                 http_response_code(200);
                 if ($mails) {
                     foreach ($mails as $mail) {
-                        $sender_info = selectWhereQuery("user", "id", $mail["id"]);
-                        $response[] = array(
-                            "sender"   => $sender_info[0]["email"],
-                            "subject"  => $mail["subject"],
-                            "send_date"=> $mail["send_date"]
-                        );
+                        $resp = array();
+                        if ($this->type == 1) {
+                            $sender_info = selectWhereQuery("user", "id", $mail["sender_id"]);
+                            $resp["sender"] = $sender_info[0]["email"];
+                        } else {
+                            $resp["sender"] = "Анонимен";
+                        }
+                        $resp["mail_id"] = $mail["id"];
+                        $resp["subject"] = $mail["subject"];
+                        $resp["send_date"] = $mail["send_date"];
+                        $response[] = $resp;
                     }
                     echo json_encode(array(
                         "body" => $response
@@ -128,16 +141,26 @@
         public function getMail($mail_id) {
             $response = array();
             try {
-                $mail = selectWhereQuery("mail", "mail_id", $mail_id);
+                $mail = selectWhereQuery("mail", "id", $mail_id);
                 if ($mail) {
-                    $sender_info = selectWhereQuery("user", "id", $mail[0]["id"]);
+                    $box_id = $mail[0]["mailbox_id"];
+                    $box_info = selectWhereQuery("mail_box", "id", $box_id);
+                    $box_type = $box_info[0]["type"];
+
+                    if ($box_type == 1) {
+                        $sender_info = selectWhereQuery("user", "id", $mail[0]["sender_id"]);
+                        $sender = $sender_info[0]["email"];
+                    } else {
+                        $sender = "Анонимен";
+                    }
                     http_response_code(200);
                     echo json_encode(array(
                         "body" => array(
-                            "sender"   => $sender_info[0]["email"],
-                            "subject"  => $mail[0]["subject"],
-                            "message"  => $mail[0]["message"],
-                            "send_date"=> $mail[0]["send_date"]
+                            "ref_number"=> $box_info[0]["ref_number"],
+                            "sender"    => $sender,
+                            "subject"   => $mail[0]["subject"],
+                            "message"   => $mail[0]["message"],
+                            "send_date" => $mail[0]["send_date"]
                         )
                     ));
                 } else {

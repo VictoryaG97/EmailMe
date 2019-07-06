@@ -79,7 +79,7 @@
                 [$this->email, $this->first_name, $this->last_name, $this->password, $this->fn, $this->role]
             );
             if ($insert_request["status"]) {
-                $box_response = create_mailbox($this->email, "General");
+                $box_response = create_mailbox($this->email, "Главна");
                 
                 if ($box_response["statusCode"] == 200){
                     $response = array(

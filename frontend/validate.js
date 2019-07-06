@@ -42,3 +42,13 @@ function testRegex(text, regex) {
 function validateIsNumber(text) {
     return testRegex(text, /^\d+$/);
 }
+
+function checkIfEmpty(data) {
+    Object.keys(data).forEach(function(key) {
+        if (data[key]==null || data[key]===false || data[key]==="") {
+            console.log(data[key]);
+            return true;
+        }
+    });
+    return false;
+}

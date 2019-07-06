@@ -15,24 +15,18 @@
         }
 
         public function setMailboxId($mail_type) {
-            $response = array();
+            $response = selectWhereQuery(
+                "mail_box", "type", $mail_type
+            );
             if ($mail_type == 1) {
-                // $this->mailbox_id = 2;
-                $resopnse = selectAndWhereQuery(
-                    "mail_box",
-                    ["owner_id", "type"],
-                    [$this->getRecieverId(), 1]);
-                if ($response){
-                    $this->mailbox_id = $response[0]["id"];
+                foreach ($response as $row) {
+                    if ($row["owner_id"] == $this->getRecieverId())
+                        $this->mailbox_id = $row["id"];
                 }
-            }
-            else {
-                $response = selecAndtWhereQuery(
-                    "mail_box",
-                    ["ref_number", "type"],
-                    [$this->ref_number, $mail_type]);
-                if ($response) {
-                    $this->mailbox_id = $response[0]["id"];
+            } else {
+                foreach ($response as $row) {
+                    if ($row["ref_number"] == $this->ref_number)
+                        $this->mailbox_id = $row["id"];
                 }
             }
         }
@@ -54,14 +48,14 @@
         public function setRefNumber($ref_number, $box_type) {
             $this->ref_number = $ref_number;
 
-            if ($box_type == 2) {
-                $response = selectAndWhereQuery(
-                    "mail_box",
-                    ["ref_number", "type"],
-                    [$ref_number, $box_type]);
+            if ($box_type != 1) {
+                $response = selectWhereQuery(
+                    "mail_box", "type", $box_type
+                );
 
-                if ($response) {
-                    $reciever_id = $response[0]["owner_id"];
+                foreach ($response as $row) {
+                    if ($row["ref_number"] == $this->ref_number)
+                        $this->reciever_id = $row["owner_id"];
                 }
             }
         }

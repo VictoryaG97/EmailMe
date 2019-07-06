@@ -27,6 +27,10 @@ ul, li {
 	list-style-type: none;
 }
 
+i {
+    margin: 0 10px;
+}
+
 input {
 	outline: none;
 	border: none;
@@ -53,6 +57,10 @@ button:hover {
 
 iframe {
 	border: none !important;
+}
+
+hr {
+    margin: 10px 0;
 }
 
 /* MUFFIN */
@@ -182,8 +190,8 @@ iframe {
     /* NAVIGATION */
 
 .muffin-navigation {
-    font-family: Montserrat-Bold;
     align-items: center;
+    height: 20%;
     margin: 3%;
     padding: 20px;
     width: 20%;
@@ -192,24 +200,31 @@ iframe {
 }
 
 .new-mail {
-    width: 70%;
+    width: 100%;
     border-radius: 25px;
     background-color: #9299b4;
     padding: 10px;
+    text-align: left;
 }
 
 .new-mail button {
     width: 100%;
     font-size: 22px;
     text-align: center;
+    color: white;
+    display: flex;
+    align-items: center;
 }
 
 .accordion {
-    background-color: white;
+    display: flex;
+    align-items: center;
+
+    background-color: #eeeded;
     color: #444;
     cursor: pointer;
-    margin: 8px;
-    padding: 20px;
+    margin: 8px 0;
+    padding: 10px;
     width: 100%;
     border: none;
     border-radius: 25px;
@@ -223,14 +238,39 @@ iframe {
 }
 
 .mail-boxes {
-    padding: 0 18px;
     display: none;
     background-color: white;
     overflow: hidden;
 }
 
+.mail-boxes ul {
+    font-size: 18px;
+    padding-left: 40px;
+}
+
+.mail-boxes li {
+    padding: 10px 14px;
+    border-radius: 25px;
+}
+
+.mail-boxes li:hover {
+    background-color: #eeeded;
+}
+
+.mail-boxes button {
+    display: flex;
+    font-size: 18px;
+    padding-left: 10px;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.mail-boxes i {
+    color: #9299b4;
+}
+
 .muffin-exit {
-    width: 70%;
+    width: 100%;
     border-radius: 25px;
     background-color: #9299b4;
     padding: 10px;
@@ -240,6 +280,9 @@ iframe {
     width: 100%;
     font-size: 22px;
     text-align: center;
+    color: white;
+    display: flex;
+    align-items: center;
 }
 
     /* MAIN */
@@ -263,10 +306,143 @@ iframe {
     padding: 2px;
 }
 
+/* MAILS */
+
+.mails {
+    display: block;
+}
+
+.mails ul {
+    display: flex;
+    font-family: Poppins-Medium;
+    background-color: #eeeded;
+    justify-content: space-between;
+    padding: 7px 15px;
+    margin-bottom: 2px;
+}
+
+.mails li {
+    float: left;
+}
 /* SEND MESSAGE */
+.info-send-message-error {
+    display: none;
+    color: red;
+    font-size: 18px;
+    margin-left: 15%;
+}
+
+
+.send-mail {
+    display: none;
+}
+
+.send-mail button {
+    color: white;
+}
 
 .mail-type {
+    margin: 5px;
+}
+
+.mail-type-choice {
     display: flex;
+    justify-content: flex-start;
+}
+
+.input-holder {
+    display: flex;
+    margin-right: 20px;
+}
+
+.mail-type-choice input[type=radio] {
+    width: 15px;
+    height: 20px;
+}
+
+.mail-input {
+    width: 100%;
+    font-size: 18px;
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+}
+
+.mail-input select {
+    width: 100%;
+    border-radius: 20%;
+    padding: 10px;
+    margin: 10px;
+    background-color: #eeeded;
+}
+
+.mail-type label {
+    margin-bottom: 10px;
+    margin-right: 10px;
+}
+
+.muffin-send-button {
+    background-color: #9299b4;
+    font-size: 18px;
+    border-radius: 25px;
+    width: 15%;
+    padding: 5px;
+    display: flex;
+    align-items: center;
+    margin: 7px;
+}
+
+/* CREATE BOX */
+
+.create-box {
+    display: none;
+}
+
+.create-box .box-ref-number {
+    display: none;
+}
+
+.create-box label{
+    width: 25%;
+    margin-bottom: 10px;
+    margin-right: 5px;
+}
+
+.create-box button {
+    float: right;
+    color: white;
+}
+
+/* READ MAIL */
+.read-mail {
+    display: none;
+}
+
+.letter-subject {
+    font-size: 25px;
+    font: bold;
+}
+
+.letter-header {
+    text-align: left;
+    margin: 7px;
+    border-spacing: 10px;
+}
+
+.message-panel {
+    border: 2px solid #eeeded;
+    border-radius: 25px;
+    padding: 20px;
+    font-size: 16px;
+}
+
+.message-opts {
+    display: flex;
+}
+
+.message-opts button {
+    width: 17%;
+    color: white;
 }
 
 .main-frame textarea {

@@ -34,13 +34,15 @@ if($jwt) {
         $decoded = JWT::decode($jwt, $secret_key, array('HS256'));
 
         if ($request_method == 'GET') {
-            $box_name = $_SERVER["HTTP_BOXNAME"];
             $mail = new MailBox();
-            $mail->setBoxName($box_name);
             $mail->setOwnerEmail($email);
-            if (isset($_GET["mail_id"])) {
+            if (isset($_SERVER["HTTP_BOXNAME"])) {
+                $box_name = rawurldecode($_SERVER["HTTP_BOXNAME"]);
+                $resp = $mail->setBoxName($box_name);
+            }
+            if (isset($_SERVER["HTTP_MAILID"])) {
                 // get specific email
-                echo $mail.getMail($_GET["mail_id"]);
+                echo $mail->getMail($_SERVER["HTTP_MAILID"]);
             } else {
                 // get all emails in this box
                 echo $mail->getMails();
@@ -51,8 +53,8 @@ if($jwt) {
                 $mail_type = $input["type"];
                 if ($mail_type == 1) {
                     $mail->setRecieverId($input["reciever"]);
-                } else if ($mail_type == 2) {
-                    $mail->setRefNumber($input["reciever"]);
+                } else {
+                    $mail->setRefNumber($input["reciever"], $mail_type);
                 }
                 $mail->setSubject($input["subject"]);
                 $mail->setMessage($input["message"]);
